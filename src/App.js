@@ -10,17 +10,19 @@ function App() {
   const [selectedDate, setSelectedDate] = useState("");
   
 
-  useEffect(()=>{
-    const formattedDate = selectedDate ? selectedDate.toString().slice(0, 10) : "2024-04-06";
+  useEffect(() => {
+    const formattedDate = selectedDate ? selectedDate.toISOString().slice(0, 10) : "2024-04-06";
+    console.log("Formatted Date:", formattedDate); // Log the formatted date
     fetch(`https://newsapi.org/v2/everything?q=${categorey}&from=${formattedDate}&apiKey=bceec75cd0244d51bf20392d31b9a2f0`)
-    .then((response)=>response.json())
-    .then((news)=>{
-       setArticles(news.articles);
-    })
-    .catch((err)=>{
-      console.log(err);
-    })
-  },[categorey,selectedDate])
+      .then((response) => response.json())
+      .then((news) => {
+        setArticles(news.articles);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [categorey, selectedDate]);
+  
 
 
   return (
@@ -55,16 +57,13 @@ function App() {
 
         {
 
-articles.length!==0?
-
-articles.map((article)=>{
-  return(
-
-    <News article={article}/>
-  )
-})
-:
-<h1>News Not Found For Searched Text</h1>
+articles && articles.length !== 0 ?
+  articles.map((article, index) => {
+    return (
+      <News key={index} article={article}/>
+    )
+  }) :
+  <h1>News Not Found For Searched Text</h1>
 }
       
       </section>
